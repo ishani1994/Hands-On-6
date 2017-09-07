@@ -1,0 +1,120 @@
+
+
+
+cric_data<- read_html("http://stats.espncricinfo.com/ci/content/records/284248.html")
+tables<-html_nodes(cric_data, "table")
+cric_table <- html_table(tables[1], fill = TRUE)
+View(cric_table)
+cric_df<- as.data.frame(cric_table)
+View(cric_df)
+cric_df[with(cric_df, order(Runs, Player)), ]
+cric_df$Runs
+TopFive_Runs<-c(cric_df$Runs[1], cric_df$Runs[2], cric_df$Runs[3], cric_df$Runs[4], cric_df$Runs[5])
+View(TopFive_Runs)
+
+Top.Five_df <- NULL
+Top.Five_df$HS<- cric_df$Runs[1:5]
+Top.Five_df$Year<- cric_df$Year[1:5]
+
+plot(Top.Five_df$Year, Top.Five_df$Runs)
+
+
+yearsort<- cricket_df[with(cric_df, order(Year, Player)), ]
+View(yearsort)
+
+yearscore.df<- as.data.frame(table(cric_df$Year))
+yearscore.df$MaxRuns <- rep(0,nrow(yearscore.df))
+yearscore.df$MaxRunsPlayer <- rep("",nrow(yearscore.df))
+for(i3 in 1:nrow(yearscore.df))
+{
+  
+  maxRuns<- subset(cricket_df,cric_df$Year==yearscore.df$Var1[i3])
+  yearscore.df$MaxRuns[i3] <- max(maxRuns$Runs)
+}
+
+for (i4 in 1:nrow(yearscore.df))
+{
+  for (i5 in 1:nrow(cricket.df))
+  {
+    if(cricket_df$Year[i5]==yearscore.df$Var1[i4] && cricket_df$Runs[i5]==yearscore.df$MaxRuns[i4])
+      yearscore.df$MaxRunsPlayer[i4] <- cricket_df$Player[i5]
+  }  
+  
+}
+
+playerMaxRunsTable <- as.data.frame(table(yearscore.df$MaxRunsPlayer))
+max(playerMaxRunsTable$Freq)
+
+print(playerMaxRunsTable)
+print("Maximum number of times a player has got the highest number of runs in a year")
+print(max(playerMaxRunsTable$Freq))
+
+
+PAK=0
+AUS=0
+IND=0
+SL=0
+ENG=0
+WI=0
+SA=0
+
+for(i in 1:length(cric_df$Player))
+{
+  if(grepl("PAK",cric_df$Player[i]))
+    PAK=PAK+1
+}
+
+View(PAK)
+
+for(i in 1:length(cric_df$Player))
+{
+  if(grepl("AUS",cric_df$Player[i]))
+    AUS=AUS+1
+}
+
+View(AUS)
+for(i in 1:length(cric_df$Player))
+{
+  if(grepl("INDIA",cric_df$Player[i]))
+    IND=IND+1
+}
+
+View(IND)
+for(i in 1:length(cric_df$Player))
+{
+  if(grepl("SL",cric_df$Player[i]))
+    SL=SL+1
+}
+
+View(SL)
+for(i in 1:length(cric_df$Player))
+{
+  if(grepl("ENG",cric_df$Player[i]))
+    ENG=ENG+1
+}
+
+View(ENG)
+for(i in 1:length(cric_df$Player))
+{
+  if(grepl("WI",cric_df$Player[i]))
+    WI=WI+1
+}
+
+View(WI)
+for(i in 1:length(cric_df$Player))
+{
+  if(grepl("SA",cric_df$Player[i]))
+    SA=SA+1
+}
+
+View(SA)
+
+Total_appearances = PAK + AUS + IND + WI + ENG + SA + SL
+
+PAK_ratio = round(100*PAK/Total_appearances,2)
+AUS_ratio = round(100*AUS/Total_appearances,2)
+IND_ratio = round(100*IND/Total_appearances,2)
+SL_ratio = round(100*SL/Total_appearances,2)
+WI_ratio = round(100*WI/Total_appearances,2)
+ENG_ratio = round(100*ENG/Total_appearances,2)
+SA_ratio = round(100*SA/Total_appearances,2)
